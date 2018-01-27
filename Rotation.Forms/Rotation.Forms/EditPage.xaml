@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Rotation.Forms.EditPage"
+             xmlns:cv="clr-namespace:Rotation.Forms.Converters"
+             xmlns:b="clr-namespace:Rotation.Forms.Behaviors"
+             xmlns:local="clr-namespace:Rotation.Forms"
+             Title="Edit page" x:Name="EditPageSelf">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:ElementType2BooleanConverter x:Key="ElementType2BooleanConv"/>
+            <cv:NegativeConverter x:Key="NegativeConv"/>
+            <cv:Boolean2ErrorTextColorConverter x:Key="Boolean2ErrorTextColorConv"/>
+            <cv:GenerationLevel2ColorConverter x:Key="GenerationLevel2ColorConv"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <ListView ItemsSource="{Binding Elements}" SelectedItem="{Binding SelectedElement,Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="8"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <BoxView Color="{Binding GenerationLevel,Converter={StaticResource GenerationLevel2ColorConv}}"/>
+                                    <Label Grid.Column="1" Text="{Binding Description}" VerticalOptions="Center" HorizontalOptions="Start"
+                                           Margin="14,0,0,0" TextColor="{Binding IsError,Converter={StaticResource Boolean2ErrorTextColorConv}}"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Picker ItemsSource="{Binding AddItems}" SelectedItem="{Binding SelectedAddItem,Mode=TwoWay}"/>
+                    <Button Grid.Column="1" Text="追加" Command="{Binding AddCommand}"/>
+                </Grid>
+                <StackLayout Orientation="Horizontal" Grid.Row="2">
+                    <Button Text="編集" Command="{Binding EditCommand}"/>
+                    <Button Text="削除">
+                        <Button.Behaviors>
+                            <b:ConfirmButtonBehavior Command="{Binding BindingContext.DeleteCommand,Source={x:Reference EditPageSelf}}" Message="本当に削除しますか？"/>
+                        </Button.Behaviors>
+                    </Button>
+                </StackLayout>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Text="←" Command="{Binding LeftCommand}"/>
+                    <Button Grid.Column="1" Text="↑" Command="{Binding UpCommand}"/>
+                    <Button Grid.Column="2" Text="↓" Command="{Binding DownCommand}"/>
+                    <Button Grid.Column="3" Text="→" Command="{Binding RightCommand}"/>
+                </Grid>
+            </Grid>
+
+            <Grid IsVisible="{Binding IsEditMode}" BackgroundColor="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Point}">
+                    <StackLayout>
+                        <Label Text="Point" Style="{StaticResource TitleLabelStyle}"/>
+                        <Label Text="指定した時間、一定の速さを維持します" Style="{StaticResource DescriptionLabelStyle}"/>
+                        <Label Text="時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                        <Entry Keyboard="Numeric" Text="{Binding SelectedElement.DuringTime,Mode=TwoWay}"/>
+                        <Label Text="速さ" Style="{StaticResource HeaderLabelStyle}"/>
+                        <local:VelocityEditor Velocity="{Binding SelectedElement.Velocity,Mode=OneWay}"/>
+                    </StackLayout>
+                </ContentView>
+                <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Line}">
+                    <StackLayout>
+                        <Label Text="Line" Style="{StaticResource TitleLabelStyle}"/>
+                        <Label Text="指定した時間の間、徐々に速さが一次関数的に変化します" Style="{StaticResource DescriptionLabelStyle}"/>
+                        <Label Text="時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                        <Entry Keyboard="Numeric" Text="{Binding SelectedElement.DuringTime,Mode=TwoWay}"/>
+                        <Label Text="初速" Style="{StaticResource HeaderLabelStyle}"/>
+                        <local:VelocityEditor Velocity="{Binding SelectedElement.StartVelocity,Mode=OneWay}"/>
+                        <Label Text="終速" Style="{StaticResource HeaderLabelStyle}"/>
+                        <local:VelocityEditor Velocity="{Binding SelectedElement.EndVelocity,Mode=OneWay}" CanTakeOver="False"/>
+                    </StackLayout>
+                </ContentView>
+                <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Mutual}">
+                    <StackLayout>
+                        <Label Text="Mutual" Style="{StaticResource TitleLabelStyle}"/>
+                        <Label Text="この要素でネストされた要素は、定期的に右回転と左回転が入れ替わります" Style="{StaticResource DescriptionLabelStyle}"/>
+                        <Label Text="半回転の時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                        <Entry Keyboard="Numeric" Text="{Binding SelectedElement.HalfFrequencyTime,Mode=TwoWay}"/>
+                    </StackLayout>
+                </ContentView>
+                <Button Grid.Row="1" Text="リストに戻る" Command="{Binding ApplyCommand}" Margin="0,16,0,12"/>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

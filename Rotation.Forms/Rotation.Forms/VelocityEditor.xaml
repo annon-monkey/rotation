@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cv="clr-namespace:Rotation.Forms.Converters"
+             x:Class="Rotation.Forms.VelocityEditor"
+             x:Name="Self">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <cv:NegativeConverter x:Key="NegativeConv"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <ContentView.Content>
+        <StackLayout>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Text="前項目の値を引き継ぐ" IsEnabled="{Binding CanTakeOver,Source={x:Reference Self}}"/>
+                <Switch Grid.Row="0" Grid.Column="1" IsToggled="{Binding Velocity.IsTakeOver,Mode=TwoWay,Source={x:Reference Self}}" IsEnabled="{Binding CanTakeOver,Source={x:Reference Self}}"/>
+                <Label Grid.Row="1" Text="逆回転" IsVisible="{Binding Velocity.IsTakeOver,Converter={StaticResource NegativeConv},Source={x:Reference Self}}"/>
+                <Switch Grid.Row="1" Grid.Column="1" IsToggled="{Binding Velocity.IsReverse,Mode=TwoWay,Source={x:Reference Self}}" IsVisible="{Binding Velocity.IsTakeOver,Converter={StaticResource NegativeConv},Source={x:Reference Self}}"/>
+            </Grid>
+            <Entry Keyboard="Numeric" Text="{Binding Velocity.Value,Mode=TwoWay,Source={x:Reference Self}}" IsVisible="{Binding Velocity.IsTakeOver,Converter={StaticResource NegativeConv},Source={x:Reference Self}}"/>
+            <Slider Value="{Binding Velocity.Value,Mode=TwoWay,Source={x:Reference Self}}" Maximum="100" Minimum="0" IsVisible="{Binding Velocity.IsTakeOver,Converter={StaticResource NegativeConv},Source={x:Reference Self}}"/>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

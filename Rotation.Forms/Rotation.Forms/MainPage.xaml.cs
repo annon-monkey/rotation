@@ -46,17 +46,10 @@ namespace Rotation.Forms
                             {
                                 //var result = await characteristic.Read(); // use result.Data to see response
                                 await characteristic.Write(new byte[] { 0x02, 0x01, 0x00, });
-                                await characteristic.Write(new byte[] { 0x02, 0x01, 0x20, });
-                                await Task.Delay(1000);
-                                await characteristic.Write(new byte[] { 0x02, 0x01, 0x40, });
-                                await Task.Delay(1000);
-                                await characteristic.Write(new byte[] { 0x02, 0x01, 0x60, });
-                                await Task.Delay(1000);
-                                await characteristic.Write(new byte[] { 0x02, 0x01, 0xa0, });
-                                await Task.Delay(1000);
-                                await characteristic.Write(new byte[] { 0x02, 0x01, 0xc0, });
-                                await Task.Delay(1000);
-                                await characteristic.Write(new byte[] { 0x02, 0x01, 0xe0, });
+                                await characteristic.Write(new byte[] { 0x02, 0x01, 0x64, });
+                                await Task.Delay(2000);
+                                await characteristic.Write(new byte[] { 0x02, 0x01, 0x7f, });
+                                await Task.Delay(2000);
                             }
                             catch (Exception e)
                             {
