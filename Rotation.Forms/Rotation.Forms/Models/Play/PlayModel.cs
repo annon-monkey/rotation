@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Rotation.Forms.Models.Play
@@ -14,6 +16,7 @@ namespace Rotation.Forms.Models.Play
     {
         private readonly UfoSaConnectionModel connection = new UfoSaConnectionModel();
         private bool isStopRequested;
+        private IDisposable stopper;
 
         public bool IsConnecting
         {
@@ -63,20 +66,52 @@ namespace Rotation.Forms.Models.Play
 
         private async Task SendAsync(ElementCollection collection)
         {
-            var time = 0;
-            try
-            {
-                foreach (var row in collection.ToEntityTimeline().OrganizedData)
-                {
-                    Task.Delay((row.Time - time) * 100).Wait();
-                    time = row.Time;
-                    if (this.isStopRequested || !this.IsConnecting) break;
-                    await this.connection.WriteAsync(row.ToBluetoothSignal());
-                }
-            }
-            catch (Exception e)
-            {
+            var rows = collection.ToEntityTimeline().OrganizedData.GetEnumerator();
+            rows.MoveNext();
+            var next = rows.Current;
 
+            var locker = new SemaphoreSlim(1);
+
+            this.stopper =
+                Observable.Interval(TimeSpan.FromMilliseconds(100))
+                            .Where(x => x >= next.Time)
+                            .Subscribe(async x =>
+                            {
+                                if (this.isStopRequested || !this.IsConnecting)
+                                {
+                                    this.stopper.Dispose();
+                                    rows.Dispose();
+                                    this.stopper = null;
+                                }
+                                else
+                                {
+                                    await locker.WaitAsync();
+
+                                    try
+                                    {
+                                        await this.connection.WriteAsync(next.ToBluetoothSignal());
+                                        if (!rows.MoveNext())
+                                        {
+                                            this.stopper.Dispose();
+                                            rows.Dispose();
+                                            this.stopper = null;
+                                        }
+                                        else
+                                        {
+                                            next = rows.Current;
+                                        }
+                                    }
+                                    catch
+                                    {
+                                    }
+
+                                    locker.Release();
+                                }
+                            });
+
+            while (this.stopper != null)
+            {
+                await Task.Delay(100);
             }
         }
 
