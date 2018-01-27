@@ -20,8 +20,7 @@ namespace Rotation.Forms.Models.Play
 
         public bool IsConnecting
         {
-            //get => this._isConnecting;
-            get => true;
+            get => this._isConnecting;
             set
             {
                 if (this._isConnecting != value)
