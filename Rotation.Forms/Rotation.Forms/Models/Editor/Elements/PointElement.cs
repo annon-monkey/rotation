@@ -1,4 +1,5 @@
-﻿using Rotation.Forms.Models.Editor.Values;
+﻿using rotation.Entities;
+using Rotation.Forms.Models.Editor.Values;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -36,6 +37,24 @@ namespace Rotation.Forms.Models.Editor.Elements
         {
             this.Description = $"Point   [{this.Velocity.ToListText()}/ {TimeUtil.ToListText(this.DuringTime)}]";
             this.IsError = this.DuringTime <= 0;
+        }
+
+        public override IEntity ToEntity(IEntity before)
+        {
+            return before.Point(this.DuringTime, this.Velocity.ToEntityValue());
+        }
+
+        public override string ToSerializedText()
+        {
+            return base.ToSerializedText() + $"|{this.DuringTime}|{this.Velocity.ToSerializedText()}";
+        }
+
+        public override void LoadSerializedText(string text)
+        {
+            var data = text.Split('|');
+            base.LoadSerializedText(data[0]);
+            this.DuringTime = int.Parse(data[1]);
+            this.Velocity.LoadSerializedText(data[2]);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Rotation.Forms
 		{
 			InitializeComponent();
 
-			MainPage = new Rotation.Forms.EditPage();
+            MainPage = new NavigationPage(new MainPage());
 		}
 
 		protected override void OnStart ()

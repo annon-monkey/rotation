@@ -1,4 +1,5 @@
-﻿using Rotation.Forms.Models.Editor.Values;
+﻿using rotation.Entities;
+using Rotation.Forms.Models.Editor.Values;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -80,7 +81,20 @@ namespace Rotation.Forms.Models.Editor.Elements
             }
         }
         private bool _isError;
-        
+
+        public abstract IEntity ToEntity(IEntity before);
+
+        public virtual string ToSerializedText()
+        {
+            return $"{(int)this.ElementType}${this.GenerationLevel}";
+        }
+
+        public virtual void LoadSerializedText(string text)
+        {
+            var data = text.Split('$');
+            this.GenerationLevel = int.Parse(data[1]);
+        }
+
         #region INotifyProeprtyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,4 +1,5 @@
-﻿using Rotation.Forms.Models.Editor.Values;
+﻿using rotation.Entities;
+using Rotation.Forms.Models.Editor.Values;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,5 +19,11 @@ namespace Rotation.Forms.Models.Editor.Elements
         int GenerationLevel { get; set; }
 
         bool IsError { get; }
+
+        IEntity ToEntity(IEntity before);
+
+        string ToSerializedText();
+
+        void LoadSerializedText(string text);
     }
 }

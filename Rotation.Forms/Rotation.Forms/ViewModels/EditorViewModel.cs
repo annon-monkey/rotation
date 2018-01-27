@@ -28,10 +28,12 @@ namespace Rotation.Forms.ViewModels
 
         public bool IsEditMode => this.model.IsEditMode;
 
-        public ObservableCollection<IElement> Elements => this.model.Elements;
+        public ElementCollection Elements => this.model.Elements;
 
         public EditorViewModel()
         {
+            this.model.Elements = ViewModelStorage.EditElements ?? new ElementCollection();
+
             this.model.PropertyChanged += this.RaisePropertyChanged;
             this.model.PropertyChanged += (sender, e) =>
             {

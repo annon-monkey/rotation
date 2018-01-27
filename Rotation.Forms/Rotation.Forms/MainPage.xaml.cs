@@ -1,5 +1,6 @@
 ﻿using Plugin.BluetoothLE;
 using Plugin.BluetoothLE.Server;
+using Rotation.Forms.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,6 +17,8 @@ namespace Rotation.Forms
 		public MainPage()
 		{
 			InitializeComponent();
+            this.BindingContext = new MainViewModel();
+            return;
 
             CrossBleAdapter.Current.Scan()
                 .Where(scanResult => scanResult.Device.Name == "UFOSA")
@@ -56,38 +59,6 @@ namespace Rotation.Forms
                             }
                         });
                 });
-        }
-
-        private async void StartServer(IScanResult scanResult)
-        {
-            var uuid = scanResult.Device.Uuid;
-
-            var server = CrossBleAdapter.Current.CreateGattServer();
-            var service = server.AddService(Guid.NewGuid(), true);
-
-            var characteristic = service.AddCharacteristic(
-                Guid.NewGuid(),
-                CharacteristicProperties.Read | CharacteristicProperties.Write,
-                GattPermissions.Read | GattPermissions.Write
-            );
-
-            characteristic.WhenReadReceived().Subscribe(x =>
-            {
-                // you must set a reply value
-                x.Value = new byte[] { 0x02, 0x01, 0x30, };
-                x.Status = GattStatus.Success; // you can optionally set a status, but it defaults to Success
-            });
-            characteristic.WhenWriteReceived().Subscribe(x =>
-            {
-                var write = Encoding.UTF8.GetString(x.Value, 0, x.Value.Length);
-                // do something value
-                Debug.WriteLine("message received: " + write);
-            });
-
-            await server.Start(new AdvertisementData
-            {
-                LocalName = "TestServer",
-            });
         }
 	}
 }

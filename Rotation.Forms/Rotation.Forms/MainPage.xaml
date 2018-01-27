@@ -2,10 +2,41 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Rotation.Forms"
-             x:Class="Rotation.Forms.MainPage">
-
-	<Label Text="Welcome to Xamarin.Forms!" 
-           VerticalOptions="Center" 
-           HorizontalOptions="Center" />
-
+             xmlns:cv="clr-namespace:Rotation.Forms.Converters"
+             xmlns:b="clr-namespace:Rotation.Forms.Behaviors"
+             x:Class="Rotation.Forms.MainPage"
+             Title="Main Page" x:Name="MainPageSelf">
+    <ContentPage.Behaviors>
+        <b:NavigatePageBehavior Helper="{Binding BindingContext.NavigateHelper,Source={x:Reference MainPageSelf}}"/>
+    </ContentPage.Behaviors>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <ListView ItemsSource="{Binding ElementCollections}" SelectedItem="{Binding SelectedCollection,Mode=TwoWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Start"
+                                     Margin="14,0,0,0">
+                            <Label Text="{Binding CollectionData.Number}"/>
+                            <Label Text=" : "/>
+                            <Label Text="{Binding CollectionData.Name}"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <StackLayout Orientation="Horizontal" Grid.Row="1">
+            <Button Text="追加" Command="{Binding AddCommand}"/>
+            <Button Text="編集" Command="{Binding EditCommand}"/>
+            <Button Text="削除">
+                <Button.Behaviors>
+                    <b:ConfirmButtonBehavior Command="{Binding BindingContext.DeleteCommand,Source={x:Reference MainPageSelf}}" Message="本当に削除しますか？"/>
+                </Button.Behaviors>
+            </Button>
+            <Button Text="開始"/>
+        </StackLayout>
+    </Grid>
 </ContentPage>

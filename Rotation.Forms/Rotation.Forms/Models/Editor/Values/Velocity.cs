@@ -64,6 +64,24 @@ namespace Rotation.Forms.Models.Editor.Values
             }
         }
 
+        public double ToEntityValue()
+        {
+            return (double)this.Value / 100 * (this.IsReverse ? -1 : 1);
+        }
+
+        public string ToSerializedText()
+        {
+            return $"{this.Value},{(this.IsReverse ? 1 : 0)},{(this.IsTakeOver ? 1 : 0)}";
+        }
+
+        public void LoadSerializedText(string text)
+        {
+            var data = text.Split(',');
+            this.Value = int.Parse(data[0]);
+            this.IsReverse = data[1] == "1";
+            this.IsTakeOver = data[2] == "1";
+        }
+
         #region INotifyProeprtyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;

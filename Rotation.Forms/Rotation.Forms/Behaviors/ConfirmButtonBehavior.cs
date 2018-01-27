@@ -70,9 +70,8 @@ namespace Rotation.Forms.Behaviors
         {
             if (this.button.TryGetTarget(out Button b) && b.IsEnabled)
             {
-                // use when using navigation page
                 // int index = Application.Current.MainPage.Navigation.NavigationStack.Count - 1;
-                // var currPage = Application.Current.MainPage.Navigation.NavigationStack[index];
+                // var page = Application.Current.MainPage.Navigation.NavigationStack[index];
 
                 if (await Application.Current.MainPage.DisplayAlert("確認", this.Message, "はい", "いいえ"))
                 {

@@ -12,7 +12,20 @@ namespace Rotation.Forms.Models.Editor
 {
     class EditorModel : INotifyPropertyChanged
     {
-        public ElementCollection Elements { get; } = new ElementCollection();
+        public ElementCollection Elements
+        {
+            get => this._elements;
+            set
+            {
+                if (this._elements != value)
+                {
+                    this._elements = value;
+                    this.OnPropertyChanged();
+                    this.SelectedElement = null;
+                }
+            }
+        }
+        private ElementCollection _elements = new ElementCollection();
 
         public IEnumerable<PickerItem<ElementType>> AddItems { get; } = new PickerItem<ElementType>[]
         {
