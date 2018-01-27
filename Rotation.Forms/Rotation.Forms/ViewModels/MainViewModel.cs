@@ -73,5 +73,12 @@ namespace Rotation.Forms.ViewModels
         public RelayCommand StopCommand =>
             this._stopCommand = this._stopCommand ?? new RelayCommand(() => this.model.Stop());
         private RelayCommand _stopCommand;
+
+        public RelayCommand AboutCommand =>
+            this._aboutCommand = this._aboutCommand ?? new RelayCommand(() =>
+            {
+                this.NavigateHelper.OnNavigate(NavigatePage.AboutPage);
+            });
+        private RelayCommand _aboutCommand;
     }
 }

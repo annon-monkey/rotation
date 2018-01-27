@@ -26,5 +26,6 @@ namespace Rotation.Forms.Helpers
     {
         MainPage,
         EditPage,
+        AboutPage,
     }
 }

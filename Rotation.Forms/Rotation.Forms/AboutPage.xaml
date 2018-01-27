@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Rotation.Forms.AboutPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label FontSize="24" Text="Rotation"/>
+            <Label TextColor="Blue" Text="Ver 1.0 beta    Copyright(C) Annonymous"/>
+            <Label TextColor="Green" Text="このアプリは、GPL v3でライセンスされています。"/>
+
+            <Label Margin="0,24,0,0" Text="Libraries" FontSize="22"/>
+            <Label Text="Plugin.BluetoothLE (MIT)"/>
+            <Label Text="Plugin.NetStandardStorage (MIT)"/>
+            <Label Text="Xamarin.Forms"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

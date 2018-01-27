@@ -9,6 +9,9 @@
     <ContentPage.Behaviors>
         <b:NavigatePageBehavior Helper="{Binding BindingContext.NavigateHelper,Source={x:Reference MainPageSelf}}"/>
     </ContentPage.Behaviors>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="About" Command="{Binding AboutCommand}"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
             <cv:NegativeConverter x:Key="NegativeConv"/>

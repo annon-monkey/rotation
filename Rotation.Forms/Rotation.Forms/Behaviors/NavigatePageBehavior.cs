@@ -40,6 +40,9 @@ namespace Rotation.Forms.Behaviors
                 case NavigatePage.MainPage:
                     page = new MainPage();
                     break;
+                case NavigatePage.AboutPage:
+                    page = new AboutPage();
+                    break;
             }
 
             Application.Current.MainPage.Navigation.PushAsync(page);
