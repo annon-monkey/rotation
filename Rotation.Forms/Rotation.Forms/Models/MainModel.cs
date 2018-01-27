@@ -1,5 +1,6 @@
 ﻿using Plugin.NetStandardStorage;
 using Rotation.Forms.Models.Editor.Elements;
+using Rotation.Forms.Models.Play;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,12 +9,31 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Rotation.Forms.Models
 {
     class MainModel : INotifyPropertyChanged
     {
+        private readonly PlayModel play = new PlayModel();
+
         public ObservableCollection<ElementCollection> ElementCollections { get; } = new ObservableCollection<ElementCollection>();
+
+        public bool IsConnecting => this.play.IsConnecting;
+
+        public bool IsPlaying
+        {
+            get => this._isPlaying;
+            set
+            {
+                if (this._isPlaying != value)
+                {
+                    this._isPlaying = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+        private bool _isPlaying;
 
         public ElementCollection SelectedCollection
         {
@@ -44,6 +64,11 @@ namespace Rotation.Forms.Models
             }
         }
         private bool _canEdit;
+
+        public MainModel()
+        {
+            this.play.PropertyChanged += (sender, e) => this.OnPropertyChanged(e.PropertyName);
+        }
 
         public void Load()
         {
@@ -117,6 +142,31 @@ namespace Rotation.Forms.Models
             {
                 this.ElementCollections.Remove(this.SelectedCollection);
                 this.SelectedCollection = null;
+            }
+        }
+
+        public void Play()
+        {
+            if (this.IsPlaying)
+            {
+                this.Stop();
+            }
+
+            var uiThread = TaskScheduler.FromCurrentSynchronizationContext();
+            this.IsPlaying = true;
+            Task.Run(async () =>
+            {
+                await this.play.PlayAsync(this.SelectedCollection);
+                await new TaskFactory(uiThread).StartNew(() => this.IsPlaying = false);
+            });
+        }
+
+        public void Stop()
+        {
+            if (this.IsPlaying)
+            {
+                this.play.Stop();
+                this.IsPlaying = false;
             }
         }
 

@@ -74,7 +74,7 @@ namespace Rotation.Forms.Models.Editor.Elements
         public EntityTimeline ToEntityTimeline()
         {
             var entity = EntityBuilder.Start();
-            foreach (var child in this)
+            foreach (var child in this.Where(e => e.GenerationLevel == 0))
             {
                 entity = this.ToEntity(entity, child);
             }

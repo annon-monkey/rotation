@@ -9,6 +9,11 @@
     <ContentPage.Behaviors>
         <b:NavigatePageBehavior Helper="{Binding BindingContext.NavigateHelper,Source={x:Reference MainPageSelf}}"/>
     </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:NegativeConverter x:Key="NegativeConv"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -38,15 +43,16 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Text="追加" Command="{Binding AddCommand}"/>
-            <Button Grid.Column="1" Text="編集" Command="{Binding EditCommand}"/>
-            <Button Grid.Column="2" Text="削除">
+            <Button Text="追加" Command="{Binding AddCommand}" IsVisible="{Binding IsPlaying,Converter={StaticResource NegativeConv}}"/>
+            <Button Grid.Column="1" Text="編集" Command="{Binding EditCommand}" IsVisible="{Binding IsPlaying,Converter={StaticResource NegativeConv}}"/>
+            <Button Grid.Column="2" Text="削除" IsVisible="{Binding IsPlaying,Converter={StaticResource NegativeConv}}">
                 <Button.Behaviors>
                     <b:ConfirmButtonBehavior Command="{Binding BindingContext.DeleteCommand,Source={x:Reference MainPageSelf}}" Message="本当に削除しますか？"/>
                 </Button.Behaviors>
             </Button>
-            <Button Grid.Row="1" Text="保存" Command="{Binding SaveCommand}"/>
-            <Button Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="開始"/>
+            <Button Grid.Row="1" Text="保存" Command="{Binding SaveCommand}" IsVisible="{Binding IsPlaying,Converter={StaticResource NegativeConv}}"/>
+            <Button Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="開始" Command="{Binding PlayCommand}" IsVisible="{Binding IsPlaying,Converter={StaticResource NegativeConv}}"/>
+            <Button Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="停止" Command="{Binding StopCommand}" IsVisible="{Binding IsPlaying}"/>
         </Grid>
     </Grid>
 </ContentPage>

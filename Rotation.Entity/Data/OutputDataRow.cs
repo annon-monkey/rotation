@@ -19,7 +19,7 @@ namespace rotation.Data
 
         public byte[] ToBluetoothSignal()
         {
-            var v = (byte)((byte)(uint)this.Velocity | (this.Velocity < 0 ? 0x80 : 0x00));
+            var v = (byte)((byte)(uint)Math.Abs(this.Velocity) | (this.Velocity < 0 ? 0x80 : 0x00));
             return new byte[] { 0x02, 0x01, v, };
         }
     }

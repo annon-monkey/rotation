@@ -22,6 +22,10 @@ namespace Rotation.Forms.ViewModels
             set => this.model.SelectedCollection = value;
         }
 
+        public bool IsConnecting => this.model.IsConnecting;
+
+        public bool IsPlaying => this.model.IsPlaying;
+
         public MainViewModel()
         {
             this.model.Load();
@@ -34,6 +38,9 @@ namespace Rotation.Forms.ViewModels
                     case nameof(this.model.CanEdit):
                         this.EditCommand.OnCanExecuteChanged();
                         this.DeleteCommand.OnCanExecuteChanged();
+                        break;
+                    case nameof(this.model.IsConnecting):
+                        this.PlayCommand.OnCanExecuteChanged();
                         break;
                 }
             };
@@ -58,5 +65,13 @@ namespace Rotation.Forms.ViewModels
         public RelayCommand SaveCommand =>
             this._saveCommand = this._saveCommand ?? new RelayCommand(() => this.model.Save());
         private RelayCommand _saveCommand;
+
+        public RelayCommand PlayCommand =>
+            this._playCommand = this._playCommand ?? new RelayCommand(() => this.model.Play(), () => this.model.IsConnecting);
+        private RelayCommand _playCommand;
+
+        public RelayCommand StopCommand =>
+            this._stopCommand = this._stopCommand ?? new RelayCommand(() => this.model.Stop());
+        private RelayCommand _stopCommand;
     }
 }
