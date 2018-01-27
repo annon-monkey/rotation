@@ -5,7 +5,7 @@
     <ContentPage.Content>
         <StackLayout>
             <Label FontSize="24" Text="Rotation"/>
-            <Label TextColor="Blue" Text="Ver 1.0 beta    Copyright(C) Annonymous"/>
+            <Label TextColor="Blue" Text="Ver 1.0 beta 2    Copyright(C) Annonymous"/>
             <Label TextColor="Green" Text="このアプリは、GPL v3でライセンスされています。"/>
 
             <Label Margin="0,24,0,0" Text="Libraries" FontSize="22"/>
