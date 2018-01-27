@@ -82,6 +82,20 @@ namespace Rotation.Forms.Models.Editor.Elements
         }
         private bool _isError;
 
+        public bool IsComment
+        {
+            get => this._isComment;
+            set
+            {
+                if (this._isComment != value)
+                {
+                    this._isComment = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+        private bool _isComment;
+
         public abstract IEntity ToEntity(IEntity before);
 
         public virtual string ToSerializedText()

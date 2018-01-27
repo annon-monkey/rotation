@@ -51,11 +51,11 @@ namespace rotation.Entities
         /// <summary>
         /// 最初に加速または減速する
         /// </summary>
-        Start,
+        Start = 1,
 
         /// <summary>
         /// 最後に加速または減速する
         /// </summary>
-        End,
+        End = 2,
     }
 }

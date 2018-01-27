@@ -104,12 +104,20 @@
                 </Grid.RowDefinitions>
                 <ScrollView>
                     <Grid>
-                        <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=CollectionSetting}">
+                        <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=From}">
                             <StackLayout>
-                                <Label Text="設定" Style="{StaticResource TitleLabelStyle}"/>
-                                <Label Text="このデータ全体の設定をします" Style="{StaticResource DescriptionLabelStyle}"/>
-                                <Label Text="名前" Style="{StaticResource HeaderLabelStyle}"/>
-                                <Entry Keyboard="Numeric" Text="{Binding Elements.CollectionData.Name,Mode=TwoWay}"/>
+                                <Label Text="From" Style="{StaticResource TitleLabelStyle}"/>
+                                <Label Text="次の要素の「前項目の値を引き継ぐ」に影響します。この要素は単体では動作しません" Style="{StaticResource DescriptionLabelStyle}"/>
+                                <Label Text="速さ" Style="{StaticResource HeaderLabelStyle}"/>
+                                <local:VelocityEditor Velocity="{Binding SelectedElement.Velocity,Mode=OneWay}"/>
+                            </StackLayout>
+                        </ContentView>
+                        <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Stop}">
+                            <StackLayout>
+                                <Label Text="Stop" Style="{StaticResource TitleLabelStyle}"/>
+                                <Label Text="一定期間、動きを止めます" Style="{StaticResource DescriptionLabelStyle}"/>
+                                <Label Text="時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.DuringTime,Mode=TwoWay}"/>
                             </StackLayout>
                         </ContentView>
                         <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Point}">
@@ -137,9 +145,67 @@
                         <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Mutual}">
                             <StackLayout>
                                 <Label Text="Mutual" Style="{StaticResource TitleLabelStyle}"/>
-                                <Label Text="この要素の子孫になった要素は、定期的に右回転と左回転が入れ替わります" Style="{StaticResource DescriptionLabelStyle}"/>
+                                <Label Text="この要素の子孫になった要素は、決まった間隔で右回転と左回転が入れ替わります" Style="{StaticResource DescriptionLabelStyle}"/>
                                 <Label Text="半回転の時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
                                 <Entry Keyboard="Numeric" Text="{Binding SelectedElement.HalfFrequencyTime,Mode=TwoWay}"/>
+                            </StackLayout>
+                        </ContentView>
+                        <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=LinearMutual}">
+                            <StackLayout>
+                                <Label Text="Linear Mutual" Style="{StaticResource TitleLabelStyle}"/>
+                                <Label Text="この要素の子孫になった要素は、時間経過で右回転と左回転が入れ替わります。入れ替わるまでの時間が少しずつ変化します" Style="{StaticResource DescriptionLabelStyle}"/>
+                                <Label Text="最初に入れ替わるまでの時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.FirstTime,Mode=TwoWay}"/>
+                                <Label Text="入れ替わる時間の最長または最短（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.MaxTime,Mode=TwoWay}"/>
+                                <Label Text="入れ替わる時間の変化量（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.DeltaTime,Mode=TwoWay}"/>
+                            </StackLayout>
+                        </ContentView>
+                        <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=RandomMutual}">
+                            <StackLayout>
+                                <Label Text="Random Mutual" Style="{StaticResource TitleLabelStyle}"/>
+                                <Label Text="この要素の子孫になった要素は、時間経過で右回転と左回転が入れ替わります。入れ替わるまでの時間がランダムに変化します" Style="{StaticResource DescriptionLabelStyle}"/>
+                                <Label Text="入れ替わる時間の最長（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.MaxTime,Mode=TwoWay}"/>
+                                <Label Text="入れ替わる時間の最短（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.MinTime,Mode=TwoWay}"/>
+                            </StackLayout>
+                        </ContentView>
+                        <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Loop}">
+                            <StackLayout>
+                                <Label Text="Loop" Style="{StaticResource TitleLabelStyle}"/>
+                                <Label Text="この要素の子孫になった要素は、決まった回数だけ繰り返し実行されます" Style="{StaticResource DescriptionLabelStyle}"/>
+                                <Label Text="繰り返し回数" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.LoopCount,Mode=TwoWay}"/>
+                            </StackLayout>
+                        </ContentView>
+                        <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Random}">
+                            <StackLayout>
+                                <Label Text="Random" Style="{StaticResource TitleLabelStyle}"/>
+                                <Label Text="速さが一定範囲内でランダムに変化します" Style="{StaticResource DescriptionLabelStyle}"/>
+                                <Label Text="速さが次に変わるまでの時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.SingleDuringTime,Mode=TwoWay}"/>
+                                <Label Text="繰り返し回数" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.LoopCount,Mode=TwoWay}"/>
+                                <Label Text="最小の速さ" Style="{StaticResource HeaderLabelStyle}"/>
+                                <local:VelocityEditor Velocity="{Binding SelectedElement.MinVelocity,Mode=OneWay}"/>
+                                <Label Text="最大の速さ" Style="{StaticResource HeaderLabelStyle}"/>
+                                <local:VelocityEditor Velocity="{Binding SelectedElement.MaxVelocity,Mode=OneWay}" CanTakeOver="False"/>
+                            </StackLayout>
+                        </ContentView>
+                        <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Trigonometric}">
+                            <StackLayout>
+                                <Label Text="Trigonometric" Style="{StaticResource TitleLabelStyle}"/>
+                                <Label Text="速さが三角関数を利用したなめらかな加速・減速をともなった変化をします" Style="{StaticResource DescriptionLabelStyle}"/>
+                                <Label Text="変化の種類" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Picker ItemsSource="{Binding SelectedElement.Functions,Mode=TwoWay}" SelectedItem="{Binding SelectedElement.Function,Mode=TwoWay}"/>
+                                <Label Text="時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.DuringTime,Mode=TwoWay}"/>
+                                <Label Text="初速" Style="{StaticResource HeaderLabelStyle}"/>
+                                <local:VelocityEditor Velocity="{Binding SelectedElement.StartVelocity,Mode=OneWay}"/>
+                                <Label Text="終速" Style="{StaticResource HeaderLabelStyle}"/>
+                                <local:VelocityEditor Velocity="{Binding SelectedElement.EndVelocity,Mode=OneWay}" CanTakeOver="False"/>
                             </StackLayout>
                         </ContentView>
                     </Grid>

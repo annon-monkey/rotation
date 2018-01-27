@@ -33,7 +33,7 @@ namespace Rotation.Forms.Models.Editor.Elements
             this.UpdateDescription();
         }
 
-        private void UpdateDescription()
+        protected virtual void UpdateDescription()
         {
             this.Description = $"Point   [{this.Velocity.ToListText()}/ {TimeUtil.ToListText(this.DuringTime)}]";
             this.IsError = this.DuringTime <= 0;

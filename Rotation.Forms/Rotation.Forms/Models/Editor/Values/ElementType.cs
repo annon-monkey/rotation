@@ -11,5 +11,13 @@ namespace Rotation.Forms.Models.Editor.Values
         Point = 1,
         Line = 2,
         Mutual = 3,
+        Loop = 4,
+        LinearMutual = 5,
+        RandomMutual = 6,
+        Random = 7,
+        Trigonometric = 8,
+        From = 9,
+        Stop = 10,
+        Comment = 11,
     }
 }

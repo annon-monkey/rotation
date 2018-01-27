@@ -98,6 +98,38 @@ namespace Rotation.Forms.Models.Editor.Elements
                     {
                         HalfCycleTime = mutual.HalfFrequencyTime,
                     });
+                case LinearMutualElement linearMutual:
+                    return before.Mutual((children) =>
+                    {
+                        foreach (var child in this.GetChildElements(element))
+                        {
+                            children = this.ToEntity(children, child);
+                        }
+                        return children;
+                    }, new LineReverseFunction
+                    {
+                        FirstTime = linearMutual.FirstTime,
+                        LimitTime = linearMutual.MaxTime,
+                        DeltaTime = linearMutual.DeltaTime,
+                    });
+                case RandomMutualElement randomMutual:
+                    return before.Mutual((children) =>
+                    {
+                        foreach (var child in this.GetChildElements(element))
+                        {
+                            children = this.ToEntity(children, child);
+                        }
+                        return children;
+                    }, new RandomReverseFunction(randomMutual.MinTime, randomMutual.MaxTime));
+                case LoopElement loop:
+                    return before.Loop((children) =>
+                    {
+                        foreach (var child in this.GetChildElements(element))
+                        {
+                            children = this.ToEntity(children, child);
+                        }
+                        return children;
+                    }, loop.LoopCount);
                 default:
                     return element.ToEntity(before);
             }

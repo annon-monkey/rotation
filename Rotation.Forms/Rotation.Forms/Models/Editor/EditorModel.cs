@@ -41,8 +41,43 @@ namespace Rotation.Forms.Models.Editor
             },
             new PickerItem<ElementType>
             {
+                Identity = ElementType.Trigonometric,
+                Text = "Trigonometric",
+            },
+            new PickerItem<ElementType>
+            {
+                Identity = ElementType.Random,
+                Text = "Random",
+            },
+            new PickerItem<ElementType>
+            {
+                Identity = ElementType.From,
+                Text = "From",
+            },
+            new PickerItem<ElementType>
+            {
+                Identity = ElementType.Stop,
+                Text = "Stop",
+            },
+            new PickerItem<ElementType>
+            {
                 Identity = ElementType.Mutual,
                 Text = "Mutual",
+            },
+            new PickerItem<ElementType>
+            {
+                Identity = ElementType.LinearMutual,
+                Text = "Linear Mutual",
+            },
+            new PickerItem<ElementType>
+            {
+                Identity = ElementType.RandomMutual,
+                Text = "Random Mutual",
+            },
+            new PickerItem<ElementType>
+            {
+                Identity = ElementType.Loop,
+                Text = "Loop",
             },
         };
 
@@ -211,7 +246,7 @@ namespace Rotation.Forms.Models.Editor
                 var parent = this.Elements.GetParentElement(value);
                 this.CanLeft = parent != null;
                 this.CanRight = prev != null && prev.CanHaveChildren
-                                && (value.CanNest || !this.Elements.GetAncestorElementsWithChild(prev).Skip(1).Any(e => e.GetType() == value.GetType()))
+                                // && (value.CanNest || !this.Elements.GetAncestorElementsWithChild(prev).Skip(1).Any(e => e.GetType() == value.GetType()))
                                 && value.GenerationLevel < 4;
             }
             else
@@ -224,19 +259,7 @@ namespace Rotation.Forms.Models.Editor
         {
             if (this.CanAdd)
             {
-                IElement element = null;
-                switch (this.SelectedAddItem.Identity)
-                {
-                    case ElementType.Point:
-                        element = new PointElement();
-                        break;
-                    case ElementType.Line:
-                        element = new LineElement();
-                        break;
-                    case ElementType.Mutual:
-                        element = new MutualElement();
-                        break;
-                }
+                IElement element = Element.FromElementType(this.SelectedAddItem.Identity);
                 
                 if (this.SelectedElement != null)
                 {
@@ -312,7 +335,10 @@ namespace Rotation.Forms.Models.Editor
         {
             if (this.CanRight)
             {
-                this.SelectedElement.GenerationLevel++;
+                foreach (var e in this.Elements.GetDescendantElementsWithRoot(this.SelectedElement).ToArray())
+                {
+                    e.GenerationLevel++;
+                }
 
                 this.UpdateCanDoneStatuses();
             }
@@ -322,10 +348,28 @@ namespace Rotation.Forms.Models.Editor
         {
             if (this.CanLeft)
             {
-                var next = this.Elements.GetNextElement(this.Elements.GetParentElement(this.SelectedElement));
+                var block = this.Elements.GetDescendantElementsWithRoot(this.SelectedElement).ToArray();
 
-                this.SelectedElement.GenerationLevel--;
-                this.Elements.Move(this.Elements.IndexOf(this.SelectedElement), next == null ? this.Elements.Count - 1 : this.Elements.IndexOf(next));
+                var oldParent = this.Elements.GetParentElement(this.SelectedElement);
+                if (oldParent != null)
+                {
+                    var oldBrothers = this.Elements.GetChildElements(oldParent).ToList();
+                    var moveTo = oldBrothers.Last();
+                    if (moveTo != this.SelectedElement)
+                    {
+                        var oldIndex = oldBrothers.IndexOf(this.SelectedElement);
+                        var newIndex = oldBrothers.IndexOf(moveTo);
+                        for (int i = 0; i < newIndex - oldIndex; i++)
+                        {
+                            this.Down();
+                        }
+                    }
+                }
+
+                foreach (var e in block)
+                {
+                    e.GenerationLevel--;
+                }
 
                 this.UpdateCanDoneStatuses();
             }

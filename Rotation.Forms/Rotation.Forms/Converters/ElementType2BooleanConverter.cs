@@ -23,6 +23,20 @@ namespace Rotation.Forms.Converters
                         return param == "Line";
                     case ElementType.Mutual:
                         return param == "Mutual";
+                    case ElementType.Loop:
+                        return param == "Loop";
+                    case ElementType.LinearMutual:
+                        return param == "LinearMutual";
+                    case ElementType.RandomMutual:
+                        return param == "RandomMutual";
+                    case ElementType.Random:
+                        return param == "Random";
+                    case ElementType.Trigonometric:
+                        return param == "Trigonometric";
+                    case ElementType.From:
+                        return param == "From";
+                    case ElementType.Stop:
+                        return param == "Stop";
                     default:
                         return false;
                 }

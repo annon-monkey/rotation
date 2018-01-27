@@ -22,4 +22,21 @@ namespace Rotation.Forms.Converters
             throw new NotSupportedException();
         }
     }
+
+    class Boolean2CommentTextColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool b)
+            {
+                return b ? Color.Green : Color.Black;
+            }
+            throw new NotSupportedException();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
 }
