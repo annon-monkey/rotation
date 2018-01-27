@@ -19,6 +19,7 @@ namespace Rotation.Forms.Models.Editor.Elements
                 {
                     this._firstTime = value;
                     this.OnPropertyChanged();
+                    this.UpdateDescription();
                 }
             }
         }
@@ -33,6 +34,7 @@ namespace Rotation.Forms.Models.Editor.Elements
                 {
                     this._maxTime = value;
                     this.OnPropertyChanged();
+                    this.UpdateDescription();
                 }
             }
         }
@@ -47,6 +49,7 @@ namespace Rotation.Forms.Models.Editor.Elements
                 {
                     this._deltaTime = value;
                     this.OnPropertyChanged();
+                    this.UpdateDescription();
                 }
             }
         }

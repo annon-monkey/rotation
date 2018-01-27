@@ -35,6 +35,7 @@ namespace Rotation.Forms.Models.Editor.Elements
                 {
                     this._function = value;
                     this.OnPropertyChanged();
+                    this.UpdateDescription();
                 }
             }
         }
@@ -49,6 +50,7 @@ namespace Rotation.Forms.Models.Editor.Elements
                 {
                     this._duringTime = value;
                     this.OnPropertyChanged();
+                    this.UpdateDescription();
                 }
             }
         }

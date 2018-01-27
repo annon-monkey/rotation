@@ -23,6 +23,7 @@ namespace Rotation.Forms.Models.Editor.Elements
                 {
                     this._singleDuringTime = value;
                     this.OnPropertyChanged();
+                    this.UpdateDescription();
                 }
             }
         }
@@ -37,6 +38,7 @@ namespace Rotation.Forms.Models.Editor.Elements
                 {
                     this._loopCount = value;
                     this.OnPropertyChanged();
+                    this.UpdateDescription();
                 }
             }
         }
