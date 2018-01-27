@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,8 @@ namespace Rotation.Forms.Models.Play
 
         public bool IsConnecting
         {
-            get => this._isConnecting;
+            //get => this._isConnecting;
+            get => true;
             set
             {
                 if (this._isConnecting != value)
@@ -48,7 +50,7 @@ namespace Rotation.Forms.Models.Play
             
             if (collection.CollectionData.IsRepeat)
             {
-                while (true)
+                while (!this.isStopRequested && this.IsConnecting)
                 {
                     await this.SendAsync(collection);
                 }
@@ -62,12 +64,19 @@ namespace Rotation.Forms.Models.Play
         private async Task SendAsync(ElementCollection collection)
         {
             var time = 0;
-            foreach (var row in collection.ToEntityTimeline().OrganizedData)
+            try
             {
-                Task.Delay((row.Time - time) * 100).Wait();
-                time = row.Time;
-                if (this.isStopRequested || !this.IsConnecting) break;
-                await this.connection.WriteAsync(row.ToBluetoothSignal());
+                foreach (var row in collection.ToEntityTimeline().OrganizedData)
+                {
+                    Task.Delay((row.Time - time) * 100).Wait();
+                    time = row.Time;
+                    if (this.isStopRequested || !this.IsConnecting) break;
+                    await this.connection.WriteAsync(row.ToBluetoothSignal());
+                }
+            }
+            catch (Exception e)
+            {
+
             }
         }
 

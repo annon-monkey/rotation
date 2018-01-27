@@ -101,7 +101,10 @@ namespace Rotation.Forms.Models.Play
         {
             await this.locker.WaitAsync();
             Debug.WriteLine(bytes[2]);
-            await this.characteristic?.Write(bytes);
+            if (this.characteristic != null)
+            {
+                await this.characteristic.Write(bytes);
+            }
             this.locker.Release();
         }
 

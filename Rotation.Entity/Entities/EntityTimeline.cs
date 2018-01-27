@@ -14,7 +14,7 @@ namespace rotation.Entities
         public IList<IEntity> Entities => this._entities;
         private readonly ObservableCollection<IEntity> _entities = new ObservableCollection<IEntity>();
 
-        internal IEnumerable<RotationDataRow> Rows => this._rowsCache = this._rowsCache ?? this.Entities.SelectMany(e => e.Output()).ToArray();
+        internal IEnumerable<RotationDataRow> Rows => this._rowsCache = this._rowsCache ?? this.Entities.SelectMany(e => e.Output());
         private IEnumerable<RotationDataRow> _rowsCache;
 
         public Time LengthTime => new Time(this.Rows.Sum(r => r.DuringTime.Value));

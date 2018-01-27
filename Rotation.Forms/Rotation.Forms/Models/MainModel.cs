@@ -154,10 +154,13 @@ namespace Rotation.Forms.Models
 
             var uiThread = TaskScheduler.FromCurrentSynchronizationContext();
             this.IsPlaying = true;
-            Task.Run(async () =>
+            Task.Run(() =>
             {
-                await this.play.PlayAsync(this.SelectedCollection);
-                await new TaskFactory(uiThread).StartNew(() => this.IsPlaying = false);
+                Task.Run(async () =>
+                {
+                    await this.play.PlayAsync(this.SelectedCollection);
+                    await new TaskFactory(uiThread).StartNew(() => this.IsPlaying = false);
+                });
             });
         }
 
