@@ -28,15 +28,25 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <StackLayout Orientation="Horizontal" Grid.Row="1">
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             <Button Text="追加" Command="{Binding AddCommand}"/>
-            <Button Text="編集" Command="{Binding EditCommand}"/>
-            <Button Text="削除">
+            <Button Grid.Column="1" Text="編集" Command="{Binding EditCommand}"/>
+            <Button Grid.Column="2" Text="削除">
                 <Button.Behaviors>
                     <b:ConfirmButtonBehavior Command="{Binding BindingContext.DeleteCommand,Source={x:Reference MainPageSelf}}" Message="本当に削除しますか？"/>
                 </Button.Behaviors>
             </Button>
-            <Button Text="開始"/>
-        </StackLayout>
+            <Button Grid.Row="1" Text="保存" Command="{Binding SaveCommand}"/>
+            <Button Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="開始"/>
+        </Grid>
     </Grid>
 </ContentPage>

@@ -57,7 +57,14 @@ namespace Rotation.Forms.Models
                     var c = new ElementCollection();
                     using (var stream = new StreamReader(file.Open(FileAccess.Read)))
                     {
-                        c.LoadSerializedText(stream.ReadToEnd());
+                        try
+                        {
+                            c.LoadSerializedText(stream.ReadToEnd());
+                        }
+                        catch (Exception e)
+                        {
+                            continue;
+                        }
                     }
                     c.CollectionData.Number = count + 1;
                     this.ElementCollections.Add(c);
@@ -74,7 +81,7 @@ namespace Rotation.Forms.Models
             foreach (var collection in this.ElementCollections)
             {
                 var file = folder.CreateFile(count + ".datav1", Plugin.NetStandardStorage.Abstractions.Types.CreationCollisionOption.OpenIfExists);
-                using (var stream = new StreamWriter(file.Open(FileAccess.Write)))
+                using (var stream = new StreamWriter(file.Open(FileAccess.ReadWrite)))
                 {
                     stream.Write(collection.ToSerializedText());
                 }
@@ -85,7 +92,7 @@ namespace Rotation.Forms.Models
                 var fn = file.Name.Split('.');
                 if (int.TryParse(fn[0], out int fc))
                 {
-                    if (fn[1] != ".datav1" || fc >= count)
+                    if (fn[1] != "datav1" || fc >= count)
                     {
                         file.Delete();
                     }

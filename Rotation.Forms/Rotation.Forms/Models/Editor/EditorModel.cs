@@ -91,6 +91,20 @@ namespace Rotation.Forms.Models.Editor
         }
         private bool _isEditMode;
 
+        public bool IsEditCollectionMode
+        {
+            get => this._isEditCollectionMode;
+            set
+            {
+                if (this._isEditCollectionMode != value)
+                {
+                    this._isEditCollectionMode = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+        private bool _isEditCollectionMode;
+
         #region Can hoge
 
         public bool CanAdd
@@ -243,6 +257,11 @@ namespace Rotation.Forms.Models.Editor
             this.IsEditMode = this.CanEdit;
         }
 
+        public void EditCollection()
+        {
+            this.IsEditCollectionMode = true;
+        }
+
         public void Delete()
         {
             if (this.CanEdit)
@@ -315,7 +334,7 @@ namespace Rotation.Forms.Models.Editor
         public void Apply()
         {
             this.SelectedElement = null;
-            this.IsEditMode = false;
+            this.IsEditMode = this.IsEditCollectionMode = false;
         }
 
         #region INotifyProeprtyChanged

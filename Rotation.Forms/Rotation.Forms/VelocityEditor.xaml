@@ -17,8 +17,8 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Text="前項目の値を引き継ぐ" IsEnabled="{Binding CanTakeOver,Source={x:Reference Self}}"/>
                 <Switch Grid.Row="0" Grid.Column="1" IsToggled="{Binding Velocity.IsTakeOver,Mode=TwoWay,Source={x:Reference Self}}" IsEnabled="{Binding CanTakeOver,Source={x:Reference Self}}"/>

@@ -28,6 +28,12 @@ namespace Rotation.Forms.ViewModels
 
         public bool IsEditMode => this.model.IsEditMode;
 
+        public bool IsEditCollectionMode
+        {
+            get => this.model.IsEditCollectionMode;
+            set => this.model.IsEditCollectionMode = value;
+        }
+
         public ElementCollection Elements => this.model.Elements;
 
         public EditorViewModel()
@@ -69,6 +75,10 @@ namespace Rotation.Forms.ViewModels
         public RelayCommand EditCommand =>
             this._editCommand = this._editCommand ?? new RelayCommand(() => this.model.Edit(), () => this.model.CanEdit);
         private RelayCommand _editCommand;
+
+        public RelayCommand EditCollectionCommand =>
+            this._editCollectionCommand = this._editCollectionCommand ?? new RelayCommand(() => this.model.EditCollection());
+        private RelayCommand _editCollectionCommand;
 
         public RelayCommand DeleteCommand =>
             this._deleteCommand = this._deleteCommand ?? new RelayCommand(() => this.model.Delete(), () => this.model.CanEdit);

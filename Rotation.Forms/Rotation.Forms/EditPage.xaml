@@ -5,7 +5,7 @@
              xmlns:cv="clr-namespace:Rotation.Forms.Converters"
              xmlns:b="clr-namespace:Rotation.Forms.Behaviors"
              xmlns:local="clr-namespace:Rotation.Forms"
-             Title="Edit page" x:Name="EditPageSelf">
+             Title="{Binding Elements.CollectionData.Name}" x:Name="EditPageSelf">
     <ContentPage.Resources>
         <ResourceDictionary>
             <cv:ElementType2BooleanConverter x:Key="ElementType2BooleanConv"/>
@@ -18,12 +18,14 @@
         <Grid>
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <ListView ItemsSource="{Binding Elements}" SelectedItem="{Binding SelectedElement,Mode=TwoWay}">
+                <Button Text="全体設定を編集" Command="{Binding EditCollectionCommand}"/>
+                <ListView Grid.Row="1" ItemsSource="{Binding Elements}" SelectedItem="{Binding SelectedElement,Mode=TwoWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
@@ -40,7 +42,7 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <Grid Grid.Row="1">
+                <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="auto"/>
@@ -48,7 +50,7 @@
                     <Picker ItemsSource="{Binding AddItems}" SelectedItem="{Binding SelectedAddItem,Mode=TwoWay}"/>
                     <Button Grid.Column="1" Text="追加" Command="{Binding AddCommand}"/>
                 </Grid>
-                <StackLayout Orientation="Horizontal" Grid.Row="2">
+                <StackLayout Orientation="Horizontal" Grid.Row="3">
                     <Button Text="編集" Command="{Binding EditCommand}"/>
                     <Button Text="削除">
                         <Button.Behaviors>
@@ -56,7 +58,7 @@
                         </Button.Behaviors>
                     </Button>
                 </StackLayout>
-                <Grid Grid.Row="3">
+                <Grid Grid.Row="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
@@ -70,41 +72,78 @@
                 </Grid>
             </Grid>
 
+            <Grid IsVisible="{Binding IsEditCollectionMode}" BackgroundColor="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <ContentView>
+                    <StackLayout>
+                        <Label Text="設定" Style="{StaticResource TitleLabelStyle}"/>
+                        <Label Text="このデータ全体の設定をします" Style="{StaticResource DescriptionLabelStyle}"/>
+                        <Label Text="名前" Style="{StaticResource HeaderLabelStyle}"/>
+                        <Entry Text="{Binding Elements.CollectionData.Name,Mode=TwoWay}"/>
+                        <Label Text="オプション" Style="{StaticResource HeaderLabelStyle}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Text="無限に繰り返す"/>
+                            <Switch Grid.Row="0" Grid.Column="1" IsToggled="{Binding Elements.CollectionData.IsRepeat,Mode=TwoWay}"/>
+                        </Grid>
+                    </StackLayout>
+                </ContentView>
+                <Button Grid.Row="1" Text="リストに戻る" Command="{Binding ApplyCommand}" Margin="0,16,0,12"/>
+            </Grid>
+
             <Grid IsVisible="{Binding IsEditMode}" BackgroundColor="White">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Point}">
-                    <StackLayout>
-                        <Label Text="Point" Style="{StaticResource TitleLabelStyle}"/>
-                        <Label Text="指定した時間、一定の速さを維持します" Style="{StaticResource DescriptionLabelStyle}"/>
-                        <Label Text="時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
-                        <Entry Keyboard="Numeric" Text="{Binding SelectedElement.DuringTime,Mode=TwoWay}"/>
-                        <Label Text="速さ" Style="{StaticResource HeaderLabelStyle}"/>
-                        <local:VelocityEditor Velocity="{Binding SelectedElement.Velocity,Mode=OneWay}"/>
-                    </StackLayout>
-                </ContentView>
-                <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Line}">
-                    <StackLayout>
-                        <Label Text="Line" Style="{StaticResource TitleLabelStyle}"/>
-                        <Label Text="指定した時間の間、徐々に速さが一次関数的に変化します" Style="{StaticResource DescriptionLabelStyle}"/>
-                        <Label Text="時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
-                        <Entry Keyboard="Numeric" Text="{Binding SelectedElement.DuringTime,Mode=TwoWay}"/>
-                        <Label Text="初速" Style="{StaticResource HeaderLabelStyle}"/>
-                        <local:VelocityEditor Velocity="{Binding SelectedElement.StartVelocity,Mode=OneWay}"/>
-                        <Label Text="終速" Style="{StaticResource HeaderLabelStyle}"/>
-                        <local:VelocityEditor Velocity="{Binding SelectedElement.EndVelocity,Mode=OneWay}" CanTakeOver="False"/>
-                    </StackLayout>
-                </ContentView>
-                <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Mutual}">
-                    <StackLayout>
-                        <Label Text="Mutual" Style="{StaticResource TitleLabelStyle}"/>
-                        <Label Text="この要素でネストされた要素は、定期的に右回転と左回転が入れ替わります" Style="{StaticResource DescriptionLabelStyle}"/>
-                        <Label Text="半回転の時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
-                        <Entry Keyboard="Numeric" Text="{Binding SelectedElement.HalfFrequencyTime,Mode=TwoWay}"/>
-                    </StackLayout>
-                </ContentView>
+                <ScrollView>
+                    <Grid>
+                        <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=CollectionSetting}">
+                            <StackLayout>
+                                <Label Text="設定" Style="{StaticResource TitleLabelStyle}"/>
+                                <Label Text="このデータ全体の設定をします" Style="{StaticResource DescriptionLabelStyle}"/>
+                                <Label Text="名前" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding Elements.CollectionData.Name,Mode=TwoWay}"/>
+                            </StackLayout>
+                        </ContentView>
+                        <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Point}">
+                            <StackLayout>
+                                <Label Text="Point" Style="{StaticResource TitleLabelStyle}"/>
+                                <Label Text="指定した時間、一定の速さを維持します" Style="{StaticResource DescriptionLabelStyle}"/>
+                                <Label Text="時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.DuringTime,Mode=TwoWay}"/>
+                                <Label Text="速さ" Style="{StaticResource HeaderLabelStyle}"/>
+                                <local:VelocityEditor Velocity="{Binding SelectedElement.Velocity,Mode=OneWay}"/>
+                            </StackLayout>
+                        </ContentView>
+                        <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Line}">
+                            <StackLayout>
+                                <Label Text="Line" Style="{StaticResource TitleLabelStyle}"/>
+                                <Label Text="指定した時間の間、徐々に速さが一次関数的に変化します" Style="{StaticResource DescriptionLabelStyle}"/>
+                                <Label Text="時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.DuringTime,Mode=TwoWay}"/>
+                                <Label Text="初速" Style="{StaticResource HeaderLabelStyle}"/>
+                                <local:VelocityEditor Velocity="{Binding SelectedElement.StartVelocity,Mode=OneWay}"/>
+                                <Label Text="終速" Style="{StaticResource HeaderLabelStyle}"/>
+                                <local:VelocityEditor Velocity="{Binding SelectedElement.EndVelocity,Mode=OneWay}" CanTakeOver="False"/>
+                            </StackLayout>
+                        </ContentView>
+                        <ContentView IsVisible="{Binding SelectedElement.ElementType,Converter={StaticResource ElementType2BooleanConv},ConverterParameter=Mutual}">
+                            <StackLayout>
+                                <Label Text="Mutual" Style="{StaticResource TitleLabelStyle}"/>
+                                <Label Text="この要素の子孫になった要素は、定期的に右回転と左回転が入れ替わります" Style="{StaticResource DescriptionLabelStyle}"/>
+                                <Label Text="半回転の時間（0.1秒）" Style="{StaticResource HeaderLabelStyle}"/>
+                                <Entry Keyboard="Numeric" Text="{Binding SelectedElement.HalfFrequencyTime,Mode=TwoWay}"/>
+                            </StackLayout>
+                        </ContentView>
+                    </Grid>
+                </ScrollView>
                 <Button Grid.Row="1" Text="リストに戻る" Command="{Binding ApplyCommand}" Margin="0,16,0,12"/>
             </Grid>
         </Grid>

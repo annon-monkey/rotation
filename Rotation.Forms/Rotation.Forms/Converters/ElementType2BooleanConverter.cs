@@ -15,6 +15,8 @@ namespace Rotation.Forms.Converters
             {
                 switch (type)
                 {
+                    case ElementType.CollectionSetting:
+                        return param == "CollectionSetting";
                     case ElementType.Point:
                         return param == "Point";
                     case ElementType.Line:

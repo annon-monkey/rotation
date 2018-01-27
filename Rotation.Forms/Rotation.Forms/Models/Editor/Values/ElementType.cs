@@ -6,6 +6,7 @@ namespace Rotation.Forms.Models.Editor.Values
 {
     enum ElementType : int
     {
+        CollectionSetting = -1,
         None = 0,
         Point = 1,
         Line = 2,

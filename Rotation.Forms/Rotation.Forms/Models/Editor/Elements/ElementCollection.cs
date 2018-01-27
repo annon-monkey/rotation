@@ -121,7 +121,11 @@ namespace Rotation.Forms.Models.Editor.Elements
             this.CollectionData.LoadSerializedText(lines.First());
             foreach (var line in lines.Skip(1))
             {
-                this.Add(Element.FromSerializedText(line));
+                var e = Element.FromSerializedText(line);
+                if (e != null)
+                {
+                    this.Add(e);
+                }
             }
         }
 
@@ -155,15 +159,30 @@ namespace Rotation.Forms.Models.Editor.Elements
             }
             private string _name;
 
+            public bool IsRepeat
+            {
+                get => this._isRepeat;
+                set
+                {
+                    if (this._isRepeat != value)
+                    {
+                        this._isRepeat = value;
+                        this.OnPropertyChanged();
+                    }
+                }
+            }
+            private bool _isRepeat;
+
             public string ToSerializedText()
             {
-                return $"{this.Name}";
+                return $"{this.Name}|{(this.IsRepeat ? 1 : 0)}";
             }
 
             public void LoadSerializedText(string text)
             {
                 var data = text.Split('|');
                 this.Name = data[0];
+                this.IsRepeat = data[1] == "1";
             }
 
             #region INotifyProeprtyChanged

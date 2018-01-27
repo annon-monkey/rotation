@@ -24,6 +24,8 @@ namespace Rotation.Forms.ViewModels
 
         public MainViewModel()
         {
+            this.model.Load();
+
             this.model.PropertyChanged += this.RaisePropertyChanged;
             this.model.PropertyChanged += (sender, e) =>
             {
@@ -52,5 +54,9 @@ namespace Rotation.Forms.ViewModels
         public RelayCommand DeleteCommand =>
             this._deleteCommand = this._deleteCommand ?? new RelayCommand(() => this.model.Delete(), () => this.model.CanEdit);
         private RelayCommand _deleteCommand;
+
+        public RelayCommand SaveCommand =>
+            this._saveCommand = this._saveCommand ?? new RelayCommand(() => this.model.Save());
+        private RelayCommand _saveCommand;
     }
 }

@@ -10,24 +10,37 @@ namespace Rotation.Forms.Models.Editor.Elements
     {
         public static IElement FromSerializedText(string text)
         {
-            var key = (ElementType)int.Parse(new string(text.TakeWhile(c => c != '$').ToArray()));
-            IElement element = null;
-
-            switch (key)
+            var k = new string(text.TakeWhile(c => c != '$').ToArray());
+            if (int.TryParse(k, out int keyInt))
             {
-                case ElementType.Point:
-                    element = new PointElement();
-                    break;
-                case ElementType.Line:
-                    element = new LineElement();
-                    break;
-                case ElementType.Mutual:
-                    element = new MutualElement();
-                    break;
+                var key = (ElementType)keyInt;
+                IElement element = null;
+
+                switch (key)
+                {
+                    case ElementType.Point:
+                        element = new PointElement();
+                        break;
+                    case ElementType.Line:
+                        element = new LineElement();
+                        break;
+                    case ElementType.Mutual:
+                        element = new MutualElement();
+                        break;
+                }
+
+                try
+                {
+                    element?.LoadSerializedText(text);
+                }
+                catch
+                {
+                    return null;
+                }
+                return element;
             }
 
-            element?.LoadSerializedText(text);
-            return element;
+            return null;
         }
     }
 }

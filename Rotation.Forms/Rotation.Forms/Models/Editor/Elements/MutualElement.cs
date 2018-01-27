@@ -19,6 +19,7 @@ namespace Rotation.Forms.Models.Editor.Elements
                 {
                     this._halfFrequencyTime = value;
                     this.OnPropertyChanged();
+                    this.UpdateDescription();
                 }
             }
         }
@@ -50,7 +51,7 @@ namespace Rotation.Forms.Models.Editor.Elements
         {
             var data = text.Split('|');
             base.LoadSerializedText(data[0]);
-            this.HalfFrequencyTime= int.Parse(data[1]);
+            this.HalfFrequencyTime = int.Parse(data[1]);
         }
     }
 }
